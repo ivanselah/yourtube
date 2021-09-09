@@ -1,0 +1,35 @@
+.container {
+  width: 50%;
+  margin-bottom: 4px;
+}
+
+.video:hover {
+  transform: scale(1.02);
+}
+
+.video {
+  display: flex;
+  align-items: center;
+  border: 1px solid lightgray;
+  box-shadow: 3px 3px 5px 0px rgba(191, 191, 191, 0.6);
+  padding: 5px;
+  cursor: pointer;
+  transition: transform 250ms ease-in;
+}
+
+.thumbanils {
+  background-color: red;
+}
+
+.metadata {
+  margin-left: 0.3em;
+}
+
+.title,
+.channel {
+  margin: 0;
+}
+
+.channel {
+  font-size: 0.9rem;
+}

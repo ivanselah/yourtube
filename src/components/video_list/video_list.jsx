@@ -1,11 +1,12 @@
 import React from "react";
-import Videoitem from "../video_item/video_item";
+import VideoItem from "../video_item/video_item";
+import styles from "./video_list.module.css";
 
 const Videolist = ({ videos }) => {
   return (
-    <ul>
+    <ul className={styles.videos}>
       {videos.map((video) => {
-        return <Videoitem key={video.id} video={video} />;
+        return <VideoItem key={video.id} video={video} />;
       })}
     </ul>
   );

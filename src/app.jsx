@@ -17,7 +17,7 @@ function App({ youtube }) {
 
   const onSearch = (keyword) => {
     setSearchCheck(true);
-    setIsLoading(true);
+
     youtube
       .search(keyword) //
       .then((result) => setVideos(result));

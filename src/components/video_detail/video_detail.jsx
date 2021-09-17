@@ -16,6 +16,7 @@ const VideoDetail = ({
     : selectedVideo.id;
 
   const clickVideoList = (video) => {
+    window.scrollTo(0, 0);
     const videoId = video.id.videoId ? video.id.videoId : video.id;
     onStatistics(videoId);
     onSelected(video);

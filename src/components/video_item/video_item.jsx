@@ -17,6 +17,7 @@ const VideoItem = ({
   } = video;
   const { snippet } = video;
   const handleCilck = () => {
+    window.scrollTo(0, 0);
     if (searchCheck) {
       onStatistics(videoId);
       onSelected(video);

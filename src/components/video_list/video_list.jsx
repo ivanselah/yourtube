@@ -2,7 +2,7 @@ import React from "react";
 import VideoItem from "../video_item/video_item";
 import styles from "./video_list.module.css";
 
-const VideoList = ({ videos, onSelected, onSearchCount, searchCheck }) => {
+const VideoList = ({ videos, onSelected, onStatistics, searchCheck }) => {
   return (
     <ul className={styles.videos}>
       {videos.map((video) => {
@@ -12,7 +12,7 @@ const VideoList = ({ videos, onSelected, onSearchCount, searchCheck }) => {
             videoId={video.id.videoId ? video.id.videoId : video.id}
             video={video}
             onSelected={onSelected}
-            onSearchCount={onSearchCount}
+            onStatistics={onStatistics}
             searchCheck={searchCheck}
           />
         );

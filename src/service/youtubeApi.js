@@ -27,7 +27,7 @@ class Youtube {
 
   searchCount = async (videoId) => {
     const response = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=statistics&id=${videoId}&key=${this.key}`,
+      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&part=statistics&id=${videoId}&key=${this.key}`,
       this.getRequestOptions
     );
     const result = await response.json();

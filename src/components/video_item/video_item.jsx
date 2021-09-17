@@ -5,7 +5,7 @@ const VideoItem = ({
   videoId,
   video,
   onSelected,
-  onSearchCount,
+  onStatistics,
   searchCheck,
 }) => {
   const {
@@ -16,11 +16,10 @@ const VideoItem = ({
     },
   } = video;
   const { snippet } = video;
-
   const handleCilck = () => {
     if (searchCheck) {
+      onStatistics(videoId);
       onSelected(video);
-      onSearchCount(videoId);
     } else {
       onSelected(video);
     }

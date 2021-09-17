@@ -6,25 +6,31 @@ import VideoDetail from "./components/video_detail/video_detail";
 
 function App({ youtube }) {
   const [videos, setVideos] = useState([]);
-  const [videoCount, setVideoCount] = useState([]);
+  const [videoStatistics, setVideoStatistics] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [searchCheck, setSearchCheck] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const onSelected = (video) => {
     setSelectedVideo(video);
   };
 
   const onSearch = (keyword) => {
+    setSearchCheck(true);
+    setIsLoading(true);
     youtube
       .search(keyword) //
       .then((result) => setVideos(result));
   };
 
-  const onSearchCount = (videoId) => {
-    setSearchCheck(true);
-    youtube
-      .searchCount(videoId) //
-      .then((result) => setVideoCount(result));
+  const onStatistics = async (videoId) => {
+    try {
+      const result = await youtube.searchCount(videoId);
+      setVideoStatistics(result[0]);
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -35,23 +41,22 @@ function App({ youtube }) {
 
   return (
     <>
-      {console.log(videoCount)}
       <VideoSearch search={onSearch} />
       {selectedVideo ? (
         <VideoDetail
+          isLoading={isLoading}
           selectedVideo={selectedVideo}
+          videoStatistics={videoStatistics}
           videos={videos}
           searchCheck={searchCheck}
-          videoCount={videoCount && videoCount}
           onSelected={onSelected}
-          onSearchCount={onSearchCount}
+          onStatistics={onStatistics}
         />
       ) : (
         <VideoList
           videos={videos}
-          videoCount={videoCount && videoCount}
           onSelected={onSelected}
-          onSearchCount={onSearchCount}
+          onStatistics={onStatistics}
           searchCheck={searchCheck}
         />
       )}

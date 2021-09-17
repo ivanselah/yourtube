@@ -1,26 +1,37 @@
 import React from "react";
 import styles from "./video_detail.module.css";
+import VideoDetailAfterSearch from "./video_detailAfterSearch";
 
 const VideoDetail = ({
+  isLoading,
   selectedVideo,
+  videoStatistics,
   videos,
   searchCheck,
   onSelected,
-  videoCount,
+  onStatistics,
 }) => {
   const youtubeId = selectedVideo.id.videoId
     ? selectedVideo.id.videoId
     : selectedVideo.id;
+
+  const clickVideoList = (video) => {
+    const videoId = video.id.videoId ? video.id.videoId : video.id;
+    onStatistics(videoId);
+    onSelected(video);
+  };
+
   return (
     <section className={styles.detail}>
       <div>
         <iframe
+          title="content"
           className={styles.player}
           allow="fullscreen"
           frameborder="0"
           src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
         ></iframe>
-        {selectedVideo.statistics && (
+        {!searchCheck ? (
           <div className={styles.description}>
             <span className={styles.tags}>
               {selectedVideo.snippet.tags &&
@@ -73,12 +84,20 @@ const VideoDetail = ({
                   .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}개`}
             </span>
           </div>
+        ) : (
+          <VideoDetailAfterSearch
+            videoStatistics={videoStatistics}
+            isLoading={isLoading}
+          />
         )}
       </div>
       <ul className={styles.videoList}>
         {videos.map((video) => {
           return (
-            <li className={styles.container} onClick={() => onSelected(video)}>
+            <li
+              className={styles.container}
+              onClick={() => clickVideoList(video)}
+            >
               <div className={styles.video}>
                 <img
                   className={styles.thumbanils}

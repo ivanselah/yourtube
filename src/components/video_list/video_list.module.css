@@ -1,6 +1,8 @@
 .videos {
+  max-width: 1800px;
+  margin: auto;
   display: flex;
   flex-wrap: wrap;
   list-style: none;
-  padding-left: 0;
+  padding-right: 0;
 }

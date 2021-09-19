@@ -1,37 +1,49 @@
+import axios from "axios";
+
 class Youtube {
   constructor(key) {
     this.key = key;
-    this.getRequestOptions = {
-      method: "GET",
-      redirect: "follow",
-    };
+    this.api = axios.create({
+      baseURL: "https://youtube.googleapis.com/youtube/v3/",
+      params: {
+        key: this.key,
+        regionCode: "kr",
+      },
+    });
   }
 
-  mostPopular = async () => {
-    const response = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&part=statistics&chart=mostPopular&maxResults=25&regionCode=Kr&key=${this.key}`,
-      this.getRequestOptions
-    );
-    const result = await response.json();
-    return result.items;
+  mostPopular = () => {
+    const response = this.api.get("videos", {
+      params: {
+        part: "snippet,statistics",
+        chart: "mostPopular",
+        maxResults: 24,
+      },
+    });
+    return response;
   };
 
-  search = async (keyword) => {
-    const response = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${keyword}&regionCode=Kr&type=video&key=${this.key}`,
-      this.getRequestOptions
-    );
-    const result = await response.json();
-    return result.items;
+  searchCount = (videoId) => {
+    const response = this.api.get("videos", {
+      params: {
+        part: "snippet,statistics",
+        id: videoId,
+        maxResults: 24,
+      },
+    });
+    return response;
   };
 
-  searchCount = async (videoId) => {
-    const response = await fetch(
-      `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&part=statistics&id=${videoId}&key=${this.key}`,
-      this.getRequestOptions
-    );
-    const result = await response.json();
-    return result.items;
+  search = (keyword) => {
+    const response = this.api.get("search", {
+      params: {
+        part: "snippet",
+        type: "video",
+        maxResults: 24,
+        q: keyword,
+      },
+    });
+    return response;
   };
 }
 

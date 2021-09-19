@@ -2,13 +2,12 @@ import React, { useRef, useState } from "react";
 import styles from "./video_search.module.css";
 import HamburgerMenu from "../video_hamburger/hamburger";
 import Hamburger from "hamburger-react";
-import { toggleMenu } from "../video_hamburger/hamburger";
 
-const VideoSearch = ({ search }) => {
+const VideoSearch = ({ onSearch }) => {
   const inputRef = useRef();
   const [isOpen, setOpen] = useState(false);
   const handleSearch = () => {
-    search(inputRef.current.value);
+    onSearch(inputRef.current.value);
     inputRef.current.value = "";
   };
 

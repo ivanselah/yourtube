@@ -5,7 +5,7 @@ const VideoItem = ({ video, onSelected, parseIntView, diffDate }) => {
   const {
     snippet: {
       thumbnails: {
-        medium: { url },
+        high: { url },
       },
     },
   } = video;
@@ -21,8 +21,8 @@ const VideoItem = ({ video, onSelected, parseIntView, diffDate }) => {
         <img className={styles.thumbanils} src={url} alt="thumbanils" />
         <div className={styles.metadata}>
           <p className={styles.title}>
-            {video.snippet.title.length > 40
-              ? `${video.snippet.title.substr(0, 35)}...`
+            {video.snippet.title.length > 30
+              ? `${video.snippet.title.substr(0, 30)}...`
               : video.snippet.title}
           </p>
           <p className={styles.channel}>{snippet.channelTitle}</p>

@@ -30,10 +30,12 @@ const VideoDetail = ({
         <div className={styles.description}>
           <span className={styles.tags}>
             {selectedVideo.snippet.tags &&
-              selectedVideo.snippet.tags.map((tag) => {
+              selectedVideo.snippet.tags.map((tag, index) => {
                 const kr = /[ㄱ-ㅎㅏ-ㅣ가-힣]/g;
                 if (kr.test(tag)) {
-                  return ` #${tag}`;
+                  if (index <= 20) {
+                    return ` #${tag}`;
+                  }
                 }
               })}
           </span>

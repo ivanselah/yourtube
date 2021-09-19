@@ -1,6 +1,7 @@
 .container {
-  width: 50%;
-  margin-bottom: 4px;
+  width: 380px;
+  margin-bottom: 10px;
+  margin: auto;
 }
 
 .video:hover {
@@ -8,8 +9,14 @@
   opacity: 0.7;
 }
 
+.video img {
+  width: 100%;
+}
+
 .video {
+  width: 380px;
   display: flex;
+  flex-direction: column;
   align-items: flex-start;
   padding: 5px;
   cursor: pointer;
@@ -22,6 +29,7 @@
 
 .metadata {
   margin-left: 0.3em;
+  height: 80px;
 }
 
 .title {
@@ -39,4 +47,23 @@
 .count {
   font-size: 14px;
   color: gray;
+}
+
+@media screen and (min-width: 2300px) {
+  .container {
+    width: 420px;
+  }
+  .video {
+    width: 420px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .container {
+    width: 480px;
+    flex-grow: 1;
+  }
+  .video {
+    width: 480px;
+  }
 }

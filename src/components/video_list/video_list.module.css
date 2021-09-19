@@ -1,9 +1,16 @@
 .videos {
-  max-width: 1800px;
+  max-width: 2000px;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   padding-left: 0;
-  margin-top: 150px;
+  margin-top: 130px;
+  margin-left: 0;
+}
+
+@media screen and (min-width: 2300px) {
+  .videos {
+    max-width: 2600px;
+  }
 }

@@ -1,12 +1,18 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import VideoList from "./components/video_list/video_list";
 import VideoSearch from "./components/video_search/video_search";
 import VideoDetail from "./components/video_detail/video_detail";
 import Loader from "./components/video_loader/video_loader";
 
 function App({ youtube }) {
-  const [itemsCount, setItemsCount] = useState(24);
-  const [videos, setVideos] = useState([]);
+  const scrollTargetRef = useRef();
+  const [itemsCount] = useState(50);
+  const [videos, setVideos] = useState();
+  const [popularVideos, setPopularVideos] = useState([]);
+
+  const [searchQ, setSearchQ] = useState(null);
+  const [nextPageTok, setNextPageTok] = useState();
+
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [comments, setComments] = useState([]);
   const [youtubeId, setYoutubeId] = useState();
@@ -18,33 +24,48 @@ function App({ youtube }) {
       const {
         data: { items },
       } = await youtube.mostPopular(itemsCount);
-      setVideos(items);
+      setPopularVideos(items);
     } catch {
     } finally {
       setIsLoading(false);
     }
   };
 
-  const scrollToGetData = () => {
-    let scrollHeight = Math.max(
-      document.documentElement.scrollHeight,
-      document.body.scrollHeight
-    );
-    let scrollTop = Math.max(
-      document.documentElement.scrollTop,
-      document.body.scrollTop
-    );
-    let clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight === scrollHeight) {
-      setItemsCount(itemsCount + 24);
-      initialRander(itemsCount);
-    }
-  };
-
   useEffect(() => {
     initialRander(itemsCount);
-    // window.addEventListener("scroll", scrollToGetData);
   }, []);
+
+  useEffect(() => {
+    createObserver();
+  }, []);
+
+  const createObserver = () => {
+    const target = scrollTargetRef.current;
+    const options = {
+      root: null,
+      threshold: 0,
+    };
+    const observer = new IntersectionObserver((entries, observer) => {
+      if (entries[0].isIntersecting === true) {
+        nextTokenVideos(searchQ);
+        console.log(entries[0].isIntersecting);
+      }
+    }, options);
+    observer.observe(target);
+  };
+
+  const nextTokenVideos = async (keyword) => {
+    if (!keyword) {
+      return;
+    } else {
+      try {
+        const { data } = await youtube.nextSearch(keyword, nextPageTok);
+        const results = data.items.map((item) => item.id.videoId);
+        setNextPageTok(data.nextPageToken);
+        onSearchCount(results);
+      } catch {}
+    }
+  };
 
   const parseIntView = (view) => {
     if (view >= 10000) {
@@ -97,10 +118,13 @@ function App({ youtube }) {
           return youtube.searchCount(id);
         })
       );
-      const videos = response.map((video) => video.data.items[0]);
-      setVideos(videos);
-    } catch (error) {
-      console.log("❌", error);
+      const addVideos = response.map((video) => video.data.items[0]);
+      if (!videos) {
+        setVideos(addVideos);
+      } else {
+        setVideos([...videos, ...addVideos]);
+      }
+    } catch {
     } finally {
       setSearchCheck(true);
       setIsLoading(false);
@@ -108,13 +132,13 @@ function App({ youtube }) {
   };
 
   const onSearch = async (keyword) => {
+    setSearchQ(keyword);
     setIsLoading(true);
     setSelectedVideo(null);
     try {
-      const {
-        data: { items },
-      } = await youtube.search(keyword);
-      const results = items.map((item) => item.id.videoId);
+      const { data } = await youtube.search(keyword);
+      const results = data.items.map((item) => item.id.videoId);
+      setNextPageTok(data.nextPageToken);
       onSearchCount(results);
     } catch {}
   };
@@ -132,19 +156,23 @@ function App({ youtube }) {
           diffDate={diffDate}
           isLoading={isLoading}
           selectedVideo={selectedVideo}
-          videos={videos}
+          videos={searchQ ? videos : popularVideos}
           onSelected={onSelected}
         />
       ) : (
         <VideoList
+          scrollTargetRef={scrollTargetRef}
           parseIntView={parseIntView}
           diffDate={diffDate}
           isLoading={isLoading}
-          videos={videos}
+          videos={searchQ ? videos : popularVideos}
           onSelected={onSelected}
           searchCheck={searchCheck}
         />
       )}
+      <div>
+        <div ref={scrollTargetRef}>Hello</div>
+      </div>
     </>
   );
 }

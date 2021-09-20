@@ -16,21 +16,23 @@ const VideoList = ({
       {isLoading ? (
         <Loader />
       ) : (
-        <ul className={styles.videos}>
-          {videos.map((video) => {
-            return (
-              <VideoItem
-                parseIntView={parseIntView}
-                diffDate={diffDate}
-                key={video.id}
-                videoId={video.id}
-                video={video}
-                onSelected={onSelected}
-                searchCheck={searchCheck}
-              />
-            );
-          })}
-        </ul>
+        <>
+          <ul className={styles.videos}>
+            {videos.map((video) => {
+              return (
+                <VideoItem
+                  parseIntView={parseIntView}
+                  diffDate={diffDate}
+                  key={video.id}
+                  videoId={video.id}
+                  video={video}
+                  onSelected={onSelected}
+                  searchCheck={searchCheck}
+                />
+              );
+            })}
+          </ul>
+        </>
       )}
     </>
   );

@@ -46,6 +46,19 @@ class Youtube {
     return response;
   };
 
+  nextSearch = (keyword, nextPageTo) => {
+    const response = this.api.get("search", {
+      params: {
+        part: "snippet",
+        type: "video",
+        maxResults: 24,
+        q: keyword,
+        pageToken: nextPageTo,
+      },
+    });
+    return response;
+  };
+
   comment = (videoId) => {
     const response = this.api.get("commentThreads", {
       params: {

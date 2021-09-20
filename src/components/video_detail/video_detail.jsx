@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./video_detail.module.css";
 
 const VideoDetail = ({
@@ -110,7 +110,7 @@ const VideoDetail = ({
           <div className={styles.comments}>
             {comments.map((comment) => {
               const commentIndex = Math.floor(
-                Math.random() * (backgroundColors.length + 1)
+                Math.random() * backgroundColors.length
               );
               return (
                 <div className={styles.commentBox}>

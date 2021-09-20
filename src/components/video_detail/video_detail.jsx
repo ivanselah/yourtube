@@ -1,20 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./video_detail.module.css";
 
 const VideoDetail = ({
+  youtubeId,
+  comments,
   parseIntView,
   diffDate,
   selectedVideo,
   videos,
   onSelected,
 }) => {
-  const youtubeId = selectedVideo.id.videoId
-    ? selectedVideo.id.videoId
-    : selectedVideo.id;
+  const [index, setIndex] = useState(0);
+
+  const backgroundColors = [
+    "#55efc4", //
+    "#0984e3",
+    "#4834d4",
+    "#130f40",
+    "#fd79a8",
+    "#fdcb6e",
+    "#d63031",
+    "#182C61",
+    "#BDC581",
+    "#B33771",
+  ];
+
+  const randomColor = () => {
+    const index = Math.floor(Math.random() * 8);
+    setIndex(index);
+  };
 
   const clickVideoList = (video) => {
     window.scrollTo(0, 0);
     onSelected(video);
+    randomColor();
   };
 
   return (
@@ -71,15 +90,46 @@ const VideoDetail = ({
             </div>
           </div>
           <hr />
-          <span className={styles.channelTitle}>
-            {selectedVideo.snippet.channelTitle}
-          </span>
+          <div className={styles.channelBox}>
+            <span
+              className={styles.channelIcon}
+              style={{ backgroundColor: `${backgroundColors[index]}` }}
+            >
+              {selectedVideo.snippet.channelTitle.substr(0, 1)}
+            </span>
+            <span className={styles.channelTitle}>
+              {selectedVideo.snippet.channelTitle}
+            </span>
+          </div>
           <hr />
           <span className={styles.comment}>
             {selectedVideo.statistics.commentCount &&
               `댓글 ${selectedVideo.statistics.commentCount //
                 .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}개`}
           </span>
+          <div className={styles.comments}>
+            {comments.map((comment) => {
+              const commentIndex = Math.floor(
+                Math.random() * (backgroundColors.length + 1)
+              );
+              return (
+                <div className={styles.commentBox}>
+                  <span
+                    className={styles.commentIcon}
+                    style={{
+                      backgroundColor: `${backgroundColors[commentIndex]}`,
+                    }}
+                  >
+                    {comment.authorDisplayName.substr(0, 2)}
+                  </span>
+                  <div className={styles.commentText}>
+                    <span>{`${diffDate(comment.publishedAt)}전`}</span>
+                    <span>{comment.textOriginal}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       <ul className={styles.videoList}>

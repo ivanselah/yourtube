@@ -12,12 +12,12 @@ class Youtube {
     });
   }
 
-  mostPopular = () => {
+  mostPopular = (itemsCount) => {
     const response = this.api.get("videos", {
       params: {
         part: "snippet,statistics",
         chart: "mostPopular",
-        maxResults: 24,
+        maxResults: itemsCount,
       },
     });
     return response;
@@ -41,6 +41,19 @@ class Youtube {
         type: "video",
         maxResults: 24,
         q: keyword,
+      },
+    });
+    return response;
+  };
+
+  comment = (videoId) => {
+    const response = this.api.get("commentThreads", {
+      params: {
+        part: "snippet",
+        videoId: videoId,
+        textFormat: "plainText",
+        order: "time",
+        maxResults: 24,
       },
     });
     return response;

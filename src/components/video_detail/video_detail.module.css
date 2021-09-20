@@ -18,7 +18,6 @@
 
 .description {
   width: 1280px;
-  height: 50px;
 }
 
 .tags {
@@ -48,6 +47,22 @@
 
 .like {
   margin-right: 20px;
+}
+
+.channelBox {
+  display: flex;
+  align-items: center;
+}
+.channelIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  font-size: 2rem;
+  border-radius: 50%;
 }
 
 .channelTitle {
@@ -112,6 +127,48 @@
   color: gray;
 }
 
+.comment {
+  display: block;
+  margin-top: 10px;
+}
+
+.comments {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.commentBox {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: center;
+}
+.commentBox div {
+  display: flex;
+  flex-direction: column;
+  line-height: 20px;
+}
+
+.commentIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  width: 40px;
+  height: 35px;
+  margin-right: 10px;
+  font-size: 1rem;
+  border-radius: 50%;
+}
+
+.commentText {
+  width: 100%;
+}
+
+.commentText span:first-child {
+  color: rgb(177, 177, 177);
+}
+
 @media screen and (min-width: 1200px) and (max-width: 1350px) {
   .detail {
     flex-direction: column;
@@ -150,6 +207,10 @@
     width: 450px;
     height: 280px;
   }
+
+  .comments {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 600px) and (max-width: 1200px) {
@@ -179,6 +240,10 @@
     flex-wrap: wrap;
     margin-bottom: 10px;
   }
+
+  .comments {
+    display: none;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -196,7 +261,7 @@
   }
   .description {
     width: 470px;
-    height: 250px;
+    height: 300px;
     font-size: 13px;
   }
   .likeUnlike {
@@ -216,5 +281,9 @@
     width: 450px;
     flex-grow: 1;
     margin-bottom: 10px;
+  }
+
+  .comments {
+    display: none;
   }
 }

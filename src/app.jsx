@@ -5,10 +5,46 @@ import VideoDetail from "./components/video_detail/video_detail";
 import Loader from "./components/video_loader/video_loader";
 
 function App({ youtube }) {
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const [searchCheck, setSearchCheck] = useState(false);
+  const [itemsCount, setItemsCount] = useState(24);
   const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [youtubeId, setYoutubeId] = useState();
+  const [searchCheck, setSearchCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const initialRander = async (itemsCount) => {
+    try {
+      const {
+        data: { items },
+      } = await youtube.mostPopular(itemsCount);
+      setVideos(items);
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const scrollToGetData = () => {
+    let scrollHeight = Math.max(
+      document.documentElement.scrollHeight,
+      document.body.scrollHeight
+    );
+    let scrollTop = Math.max(
+      document.documentElement.scrollTop,
+      document.body.scrollTop
+    );
+    let clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight === scrollHeight) {
+      setItemsCount(itemsCount + 24);
+      initialRander(itemsCount);
+    }
+  };
+
+  useEffect(() => {
+    initialRander(itemsCount);
+    // window.addEventListener("scroll", scrollToGetData);
+  }, []);
 
   const parseIntView = (view) => {
     if (view >= 10000) {
@@ -36,8 +72,22 @@ function App({ youtube }) {
     }
   }, []);
 
+  const getComments = async (youtubeId) => {
+    try {
+      const {
+        data: { items },
+      } = await youtube.comment(youtubeId);
+      const results = items.map((item) => {
+        return item.snippet.topLevelComment.snippet;
+      });
+      setComments(results);
+    } catch {}
+  };
+
   const onSelected = (video) => {
     setSelectedVideo(video);
+    setYoutubeId(video.id);
+    getComments(video.id);
   };
 
   const onSearchCount = async (results) => {
@@ -69,22 +119,6 @@ function App({ youtube }) {
     } catch {}
   };
 
-  const initialRander = async () => {
-    try {
-      const {
-        data: { items },
-      } = await youtube.mostPopular();
-      setVideos(items);
-    } catch {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    initialRander();
-  }, []);
-
   return (
     <>
       <VideoSearch onSearch={onSearch} />
@@ -92,6 +126,8 @@ function App({ youtube }) {
         <Loader />
       ) : selectedVideo ? (
         <VideoDetail
+          youtubeId={youtubeId}
+          comments={comments}
           parseIntView={parseIntView}
           diffDate={diffDate}
           isLoading={isLoading}

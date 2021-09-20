@@ -2,13 +2,6 @@ import React from "react";
 import styles from "./video_item.module.css";
 
 const VideoItem = ({ video, onSelected, parseIntView, diffDate }) => {
-  const {
-    snippet: {
-      thumbnails: {
-        high: { url },
-      },
-    },
-  } = video;
   const { snippet } = video;
   const handleCilck = () => {
     window.scrollTo(0, 0);
@@ -18,7 +11,11 @@ const VideoItem = ({ video, onSelected, parseIntView, diffDate }) => {
   return (
     <li className={styles.container} onClick={handleCilck}>
       <div className={styles.video}>
-        <img className={styles.thumbanils} src={url} alt="thumbanils" />
+        <img
+          className={styles.thumbanils}
+          src={snippet.thumbnails && snippet.thumbnails.high.url}
+          alt="thumbanils"
+        />
         <div className={styles.metadata}>
           <p className={styles.title}>
             {video.snippet.title.length > 30

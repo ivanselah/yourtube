@@ -113,7 +113,10 @@ const VideoDetail = ({
                 Math.random() * backgroundColors.length
               );
               return (
-                <div className={styles.commentBox}>
+                <div
+                  className={styles.commentBox}
+                  key={Math.floor(Math.random() * 10000000)}
+                >
                   <span
                     className={styles.commentIcon}
                     style={{

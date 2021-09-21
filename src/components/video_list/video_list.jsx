@@ -4,6 +4,7 @@ import Loader from "../video_loader/video_loader";
 import styles from "./video_list.module.css";
 
 const VideoList = ({
+  scrollTargetRef,
   parseIntView,
   diffDate,
   isLoading,
@@ -32,6 +33,11 @@ const VideoList = ({
               );
             })}
           </ul>
+          <div>
+            <div ref={scrollTargetRef} className={styles.targetObserver}>
+              Hello
+            </div>
+          </div>
         </>
       )}
     </>

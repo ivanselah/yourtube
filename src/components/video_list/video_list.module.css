@@ -9,6 +9,14 @@
   margin-left: 0;
 }
 
+.targetObserver {
+  position: absolute;
+  background-color: red;
+  transform: translateY(-100px);
+  z-index: 1;
+  bottom: 0;
+}
+
 @media screen and (min-width: 2300px) {
   .videos {
     max-width: 2600px;

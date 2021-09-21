@@ -6,7 +6,7 @@ import Loader from "./components/video_loader/video_loader";
 
 function App({ youtube }) {
   const scrollTargetRef = useRef();
-  const [itemsCount] = useState(50);
+  const [itemsCount] = useState(24);
   const [videos, setVideos] = useState();
   const [popularVideos, setPopularVideos] = useState([]);
 
@@ -36,8 +36,14 @@ function App({ youtube }) {
   }, []);
 
   useEffect(() => {
-    createObserver();
-  }, []);
+    let observerCheck;
+    if (scrollTargetRef.current) {
+      observerCheck = createObserver();
+    }
+    if (observerCheck) {
+      observerCheck.disconnect();
+    }
+  }, [isLoading]);
 
   const createObserver = () => {
     const target = scrollTargetRef.current;
@@ -46,25 +52,21 @@ function App({ youtube }) {
       threshold: 0,
     };
     const observer = new IntersectionObserver((entries, observer) => {
-      if (entries[0].isIntersecting === true) {
+      if (searchQ && !entries[0].isIntersecting) {
         nextTokenVideos(searchQ);
-        console.log(entries[0].isIntersecting);
       }
     }, options);
     observer.observe(target);
+    return observer;
   };
 
   const nextTokenVideos = async (keyword) => {
-    if (!keyword) {
-      return;
-    } else {
-      try {
-        const { data } = await youtube.nextSearch(keyword, nextPageTok);
-        const results = data.items.map((item) => item.id.videoId);
-        setNextPageTok(data.nextPageToken);
-        onSearchCount(results);
-      } catch {}
-    }
+    try {
+      const { data } = await youtube.nextSearch(keyword, nextPageTok);
+      const results = data.items.map((item) => item.id.videoId);
+      setNextPageTok(data.nextPageToken);
+      onScrollCount(results);
+    } catch {}
   };
 
   const parseIntView = (view) => {
@@ -111,6 +113,21 @@ function App({ youtube }) {
     getComments(video.id);
   };
 
+  const onScrollCount = async (results) => {
+    try {
+      const response = await Promise.all(
+        results.map((id) => {
+          return youtube.searchCount(id);
+        })
+      );
+      const addVideos = response.map((video) => video.data.items[0]);
+      setVideos([...videos, ...addVideos]);
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const onSearchCount = async (results) => {
     try {
       const response = await Promise.all(
@@ -119,11 +136,7 @@ function App({ youtube }) {
         })
       );
       const addVideos = response.map((video) => video.data.items[0]);
-      if (!videos) {
-        setVideos(addVideos);
-      } else {
-        setVideos([...videos, ...addVideos]);
-      }
+      setVideos(addVideos);
     } catch {
     } finally {
       setSearchCheck(true);
@@ -132,15 +145,21 @@ function App({ youtube }) {
   };
 
   const onSearch = async (keyword) => {
-    setSearchQ(keyword);
-    setIsLoading(true);
-    setSelectedVideo(null);
+    if (keyword === searchQ) {
+      return;
+    } else {
+      setSearchQ(keyword);
+      setIsLoading(true);
+      setSelectedVideo(null);
+    }
     try {
       const { data } = await youtube.search(keyword);
       const results = data.items.map((item) => item.id.videoId);
       setNextPageTok(data.nextPageToken);
       onSearchCount(results);
-    } catch {}
+    } catch {
+    } finally {
+    }
   };
 
   return (
@@ -170,9 +189,6 @@ function App({ youtube }) {
           searchCheck={searchCheck}
         />
       )}
-      <div>
-        <div ref={scrollTargetRef}>Hello</div>
-      </div>
     </>
   );
 }

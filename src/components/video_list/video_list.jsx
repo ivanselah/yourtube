@@ -33,13 +33,11 @@ const VideoList = ({
               );
             })}
           </ul>
-          <div ref={scrollTargetRef} className={styles.targetObserver}>
-            Hello
-          </div>
+          <div ref={scrollTargetRef} className={styles.targetObserver}></div>
         </div>
       )}
     </>
   );
 };
 
-export default VideoList;
+export default React.memo(VideoList);

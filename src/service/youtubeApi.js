@@ -12,12 +12,12 @@ class Youtube {
     });
   }
 
-  mostPopular = (itemsCount) => {
+  mostPopular = () => {
     const response = this.api.get("videos", {
       params: {
         part: "snippet,statistics",
         chart: "mostPopular",
-        maxResults: itemsCount,
+        maxResults: 50,
       },
     });
     return response;
@@ -28,7 +28,7 @@ class Youtube {
       params: {
         part: "snippet,statistics",
         id: videoId,
-        maxResults: 24,
+        maxResults: 25,
       },
     });
     return response;
@@ -39,7 +39,7 @@ class Youtube {
       params: {
         part: "snippet",
         type: "video",
-        maxResults: 24,
+        maxResults: 25,
         q: keyword,
       },
     });
@@ -51,7 +51,7 @@ class Youtube {
       params: {
         part: "snippet",
         type: "video",
-        maxResults: 24,
+        maxResults: 25,
         q: keyword,
         pageToken: nextPageTo,
       },
@@ -66,7 +66,7 @@ class Youtube {
         videoId: videoId,
         textFormat: "plainText",
         order: "time",
-        maxResults: 24,
+        maxResults: 25,
       },
     });
     return response;

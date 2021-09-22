@@ -6,12 +6,11 @@ import Loader from "./components/video_loader/video_loader";
 
 function App({ youtube }) {
   const scrollTargetRef = useRef();
-  const [itemsCount] = useState(24);
   const [videos, setVideos] = useState();
   const [popularVideos, setPopularVideos] = useState([]);
 
   const [searchQ, setSearchQ] = useState(null);
-  const [nextPageTok, setNextPageTok] = useState();
+  const [nextPageTok, setNextPageTok] = useState(null);
   const [videosKey, setVideosKey] = useState();
 
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -20,27 +19,27 @@ function App({ youtube }) {
   const [searchCheck, setSearchCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const initialRander = async (itemsCount) => {
-    try {
-      const {
-        data: { items },
-      } = await youtube.mostPopular(itemsCount);
-      setPopularVideos(items);
-    } catch {
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    initialRander(itemsCount);
+    initialRander();
   }, []);
 
   useEffect(() => {
     if (scrollTargetRef.current) {
       createObserver();
     }
-  }, [isLoading]);
+  }, [isLoading, nextPageTok]);
+
+  const initialRander = async () => {
+    try {
+      const {
+        data: { items },
+      } = await youtube.mostPopular();
+      setPopularVideos(items);
+    } catch {
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const createObserver = () => {
     const target = scrollTargetRef.current;
@@ -50,7 +49,6 @@ function App({ youtube }) {
     };
     const observer = new IntersectionObserver((entries, observer) => {
       if (entries[0].isIntersecting && searchQ) {
-        console.log(entries);
         nextTokenVideos(searchQ);
         observer && observer.disconnect();
       }
@@ -63,15 +61,12 @@ function App({ youtube }) {
       const { data } = await youtube.nextSearch(keyword, nextPageTok);
       const results = data.items.map((item) => item.id.videoId);
       const overlap = results.filter((item) => !videosKey.includes(item));
-      setNextPageTok(data.nextPageToken);
+      const nextToken = data.nextPageToken;
+      setNextPageTok(nextToken);
       onScrollCount(overlap);
       setVideosKey(overlap);
-    } catch {
-    } finally {
-      setIsLoading(true);
-    }
+    } catch {}
   };
-
   const parseIntView = (view) => {
     if (view >= 10000) {
       return `${parseInt(view / 10000)}만`;
@@ -125,13 +120,11 @@ function App({ youtube }) {
       );
       const addVideos = response.map((video) => video.data.items[0]);
       setVideos([...videos, ...addVideos]);
-    } catch {
-    } finally {
-      setIsLoading(false);
-    }
+    } catch {}
   };
 
   const onSearchCount = async (results) => {
+    setIsLoading(true);
     try {
       const response = await Promise.all(
         results.map((id) => {
@@ -158,8 +151,9 @@ function App({ youtube }) {
     try {
       const { data } = await youtube.search(keyword);
       const results = data.items.map((item) => item.id.videoId);
+      const preToken = data.nextPageToken;
       setVideosKey(results);
-      setNextPageTok(data.nextPageToken);
+      setNextPageTok(preToken);
       onSearchCount(results);
     } catch {
     } finally {

@@ -127,7 +127,11 @@ const VideoDetail = ({
                   </span>
                   <div className={styles.commentText}>
                     <span>{`${diffDate(comment.publishedAt)}전`}</span>
-                    <span>{comment.textOriginal}</span>
+                    <span>
+                      {comment.textOriginal.length > 100
+                        ? `${comment.textOriginal.substr(0, 100)}...`
+                        : comment.textOriginal}
+                    </span>
                   </div>
                 </div>
               );

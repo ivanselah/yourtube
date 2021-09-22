@@ -47,10 +47,11 @@
 
 @media screen and (min-width: 2300px) {
   .container {
-    width: 420px;
+    width: 500px;
+    margin: auto;
   }
   .video {
-    width: 420px;
+    width: 500px;
   }
 }
 

@@ -9,6 +9,7 @@
   width: 200px;
   height: 100%;
   background-color: #f5f6fa;
+  z-index: 2;
 }
 
 .item {
@@ -31,6 +32,7 @@
   height: 100%;
   background-color: rgba(177, 177, 177, 0.7);
   opacity: 0.4;
+  z-index: 2;
 }
 
 .maker {

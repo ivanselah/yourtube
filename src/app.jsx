@@ -12,6 +12,7 @@ function App({ youtube }) {
 
   const [searchQ, setSearchQ] = useState(null);
   const [nextPageTok, setNextPageTok] = useState();
+  const [videosKey, setVideosKey] = useState();
 
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [comments, setComments] = useState([]);
@@ -36,12 +37,8 @@ function App({ youtube }) {
   }, []);
 
   useEffect(() => {
-    let observerCheck;
     if (scrollTargetRef.current) {
-      observerCheck = createObserver();
-    }
-    if (observerCheck) {
-      observerCheck.disconnect();
+      createObserver();
     }
   }, [isLoading]);
 
@@ -52,21 +49,27 @@ function App({ youtube }) {
       threshold: 0,
     };
     const observer = new IntersectionObserver((entries, observer) => {
-      if (searchQ && !entries[0].isIntersecting) {
+      if (entries[0].isIntersecting && searchQ) {
+        console.log(entries);
         nextTokenVideos(searchQ);
+        observer && observer.disconnect();
       }
     }, options);
     observer.observe(target);
-    return observer;
   };
 
   const nextTokenVideos = async (keyword) => {
     try {
       const { data } = await youtube.nextSearch(keyword, nextPageTok);
       const results = data.items.map((item) => item.id.videoId);
+      const overlap = results.filter((item) => !videosKey.includes(item));
       setNextPageTok(data.nextPageToken);
-      onScrollCount(results);
-    } catch {}
+      onScrollCount(overlap);
+      setVideosKey(overlap);
+    } catch {
+    } finally {
+      setIsLoading(true);
+    }
   };
 
   const parseIntView = (view) => {
@@ -155,10 +158,12 @@ function App({ youtube }) {
     try {
       const { data } = await youtube.search(keyword);
       const results = data.items.map((item) => item.id.videoId);
+      setVideosKey(results);
       setNextPageTok(data.nextPageToken);
       onSearchCount(results);
     } catch {
     } finally {
+      window.scrollTo(0, 0);
     }
   };
 

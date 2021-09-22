@@ -17,7 +17,7 @@ const VideoList = ({
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <div className={styles.videosContainer}>
           <ul className={styles.videos}>
             {videos.map((video) => {
               return (
@@ -33,12 +33,10 @@ const VideoList = ({
               );
             })}
           </ul>
-          <div>
-            <div ref={scrollTargetRef} className={styles.targetObserver}>
-              Hello
-            </div>
+          <div ref={scrollTargetRef} className={styles.targetObserver}>
+            Hello
           </div>
-        </>
+        </div>
       )}
     </>
   );

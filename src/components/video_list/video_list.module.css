@@ -1,3 +1,7 @@
+.videosContainer {
+  position: relative;
+}
+
 .videos {
   max-width: 2000px;
   margin: auto;
@@ -12,13 +16,15 @@
 .targetObserver {
   position: absolute;
   background-color: red;
-  transform: translateY(-100px);
-  z-index: 1;
   bottom: 0;
+  transform: translateY(-500px);
+  z-index: 1;
 }
 
 @media screen and (min-width: 2300px) {
   .videos {
-    max-width: 2600px;
+    max-width: 2500px;
+    margin: auto;
+    margin-top: 130px;
   }
 }

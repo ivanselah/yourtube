@@ -8,7 +8,7 @@
 
 ##### 토이프로젝트 ReactJS, PostCss
 
-https://hahmsongmin.github.io/yourtube/
+https://ivanselah.github.io/yourtube/
 
 : Youtube의 주요 기능인 인기동영상, 동영상 검색 및 재생 스크롤을 이용한 페이지로드
 
